@@ -22,7 +22,7 @@ module Vos
         path = normalize_path(path)
         return {dir: true, file: false} if path.empty?
 
-        file = bucket.objects[path]
+        file = connection.get_object(bucket: bucket.name, key: path).body
         if file.exists?
           attrs = {}
           attrs[:file] = true
@@ -45,14 +45,14 @@ module Vos
       #
       def read_file path, &block
         path = normalize_path path
-        file = bucket.objects[path]
+        file = connection.get_object(bucket: bucket.name, key: path).body
         block.call file.read
       end
 
       def write_file original_path, append, &block
         path = normalize_path original_path
 
-        file = bucket.objects[path]
+        file = connection.get_object(bucket: bucket.name, key: path).body
         if append
           # there's no support for :append in Fog, so we just mimic it
           writer = Writer.new

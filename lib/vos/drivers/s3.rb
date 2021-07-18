@@ -32,8 +32,11 @@ module Vos
           end
         else
           unless connection
-            @connection = ::Aws::S3.new self.options.clone
-            @bucket = @connection.buckets[bucket_name]
+            @connection = ::Aws::S3::Client.new self.options.clone
+            @bucket = @connection.list_buckets
+              .buckets
+              .select { |bucket| bucket.name == bucket_name}
+              .first
           end
         end
       end
