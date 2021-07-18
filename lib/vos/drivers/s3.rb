@@ -32,7 +32,7 @@ module Vos
           end
         else
           unless connection
-            @connection = ::AWS::S3.new self.options.clone
+            @connection = ::Aws::S3.new self.options.clone
             @bucket = @connection.buckets[bucket_name]
           end
         end
